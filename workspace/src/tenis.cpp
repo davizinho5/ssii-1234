@@ -1,5 +1,6 @@
 #include "glut.h"
 #include "Mundo.h"
+#include <iostream>
 
 //el unico objeto global
 CMundo mundo;
@@ -13,6 +14,8 @@ void OnKeyboardDown(unsigned char key, int x, int y); //cuando se pulse una tecl
 
 int main(int argc,char* argv[])
 {
+        std::cout << "HOLA MUNDO" << std::endl;
+        
 	//Inicializar el gestor de ventanas GLUT
 	//y crear la ventana
 	glutInit(&argc, argv);

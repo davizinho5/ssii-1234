@@ -13,9 +13,7 @@ void OnTimer(int value); //esta funcion sera llamada cuando transcurra una tempo
 void OnKeyboardDown(unsigned char key, int x, int y); //cuando se pulse una tecla	
 
 int main(int argc,char* argv[])
-{
-        std::cout << "HOLA MUNDO" << std::endl;
-               
+{         
 	//Inicializar el gestor de ventanas GLUT
 	//y crear la ventana
 	glutInit(&argc, argv);

@@ -10,6 +10,11 @@
 #include <string.h>
 #include <math.h>
 
+#include <iostream>
+#include <unistd.h>
+#include <fcntl.h>
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -17,11 +22,13 @@
 CMundo::CMundo()
 {
 	Init();
+	puntos1 = 0;
+	puntos2 = 0;
 }
 
 CMundo::~CMundo()
 {
-
+        close(tuberia);	
 }
 
 void CMundo::InitGL()
@@ -135,6 +142,10 @@ void CMundo::OnTimer(int value)
 		esfera.velocidad.x=2+2*rand()/(float)RAND_MAX;
 		esfera.velocidad.y=2+2*rand()/(float)RAND_MAX;
 		puntos2++;
+		// Se envia el punto al logger a traves de la FIFO
+		char cad[1024];
+		sprintf(cad,"Jugador2 marco 1 punto, lleva %d\n", puntos2);
+		write(tuberia,cad,strlen(cad)+1);		
 	}
 
 	if(fondo_dcho.Rebota(esfera))
@@ -144,6 +155,16 @@ void CMundo::OnTimer(int value)
 		esfera.velocidad.x=-2-2*rand()/(float)RAND_MAX;
 		esfera.velocidad.y=-2-2*rand()/(float)RAND_MAX;
 		puntos1++;
+                // Se envia el punto al logger a traves de la FIFO
+		char cad[1024];
+		sprintf(cad,"Jugador1 marco 1 punto, lleva %d\n",puntos1);
+		write(tuberia,cad,strlen(cad)+1);
+	}
+	
+	if( (puntos1 > 2) || (puntos2 > 2))
+	{
+		std::cout << "Ha terminado el partido" << std::endl;
+		exit(0);	
 	}
 
 }
@@ -192,4 +213,10 @@ void CMundo::Init()
 	jugador2.g=0;
 	jugador2.x1=6;jugador2.y1=-1;
 	jugador2.x2=6;jugador2.y2=1;
+	
+	// Se abre la tuberia con el Logger
+	if ((tuberia=open("TuberiaLogger",O_WRONLY))<0) {
+		perror("No puede abrirse el FIFO");
+		exit(1);
+	}	
 }

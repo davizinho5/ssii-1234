@@ -15,3 +15,6 @@ ADD_EXECUTABLE(tenis src/tenis.cpp ${COMMON_SRCS})
 TARGET_LINK_LIBRARIES(tenis glut GL GLU)
 
 add_executable(logger src/logger.cpp)
+
+add_executable(bot src/bot.cpp  ${COMMON_SRCS})
+TARGET_LINK_LIBRARIES(bot glut GL GLU)

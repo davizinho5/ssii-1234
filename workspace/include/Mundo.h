@@ -5,6 +5,7 @@
 #if !defined(AFX_MUNDO_H__9510340A_3D75_485F_93DC_302A43B8039A__INCLUDED_)
 #define AFX_MUNDO_H__9510340A_3D75_485F_93DC_302A43B8039A__INCLUDED_
 
+#pragma once 
 #include <vector>
 #include "Plano.h"
 
@@ -14,6 +15,8 @@
 
 #include "Esfera.h"
 #include "Raqueta.h"
+
+#include "DatosMemCompartida.h"
 
 class CMundo  
 {
@@ -39,6 +42,9 @@ public:
 
         // Tuberia FIFO para comunicarse con el logger
         int tuberia;	
+        
+        // Datos memoria compartida
+        DatosMemCompartida * datos;
 };
 
 #endif // !defined(AFX_MUNDO_H__9510340A_3D75_485F_93DC_302A43B8039A__INCLUDED_)

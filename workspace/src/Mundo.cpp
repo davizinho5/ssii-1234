@@ -1,6 +1,7 @@
 // Mundo.cpp: implementation of the CMundo class.
 //
 //////////////////////////////////////////////////////////////////////
+
 #include <fstream>
 #include "Mundo.h"
 #include "glut.h"
@@ -14,6 +15,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+// Bibliotecas practica 3
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -161,6 +166,18 @@ void CMundo::OnTimer(int value)
 		write(tuberia,cad,strlen(cad)+1);
 	}
 	
+	// P3, actualizar datos
+	// y comandar como si se pulsan teclas 
+	datos->esfera.centro=esfera.centro;
+	datos->raqueta1=jugador1;
+	
+	if(datos->accion==-1){
+		OnKeyboardDown('s',0,0);
+	}
+	if(datos->accion==1) {
+		OnKeyboardDown('w',0,0);
+	}	
+	
 	if( (puntos1 > 2) || (puntos2 > 2))
 	{
 		std::cout << "Ha terminado el partido" << std::endl;
@@ -219,4 +236,28 @@ void CMundo::Init()
 		perror("No puede abrirse el FIFO");
 		exit(1);
 	}	
+	
+	// P3
+	int fd, nbytes;  // id fichero y bytes escritura
+	char *direccion; // direccion mem compartida
+	
+	// Crea la zona de memoria compartida
+	fd=open("bot.dat",O_CREAT|O_RDWR|O_TRUNC,0666);
+	if (fd == -1) {
+		perror("open"); 
+		exit(1);
+	}
+	nbytes=write(fd,&datos,sizeof(datos));
+	if (nbytes == -1) {
+		perror("write"); 
+		exit(1);
+	}
+	
+        direccion=(char*)mmap(NULL,sizeof(datos),PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+	if (direccion == (void *) -1) {
+		perror("mmap"); 
+		exit(1);
+	}
+	close(fd);
+	datos=(DatosMemCompartida *) direccion;
 }
